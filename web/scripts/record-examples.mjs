@@ -14,7 +14,7 @@ import {fileURLToPath} from 'node:url'
 
 const QUESTIONS = [
   'Which of these can I still apply to, and what is the deadline?',
-  'Is Odoo Hackathon #6 actually free?',
+  'If I go to a CASSINI local hackathon, can I win the 9,000 EUR?',
   'Which prizes are real cash?',
   'What do the listing sites get wrong?',
 ]

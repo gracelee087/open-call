@@ -94,6 +94,16 @@ const sources: SourceSeed[] = [
     aboutEdition: 2026,
   },
   {
+    id: 'src-cassini-rules',
+    url: 'https://www.cassini.eu/hackathons/sites/default/files/2024-09/Rules%20of%20Contest%20-%20Cassini%20Hackathons%20Prize%20after%20Corrigendum%201.pdf',
+    title: 'Rules of Contest for the Cassini Hackathons Prize Contest (after Corrigendum 1)',
+    publisher: 'EUSPA',
+    kind: 'official-rules',
+    publishedOn: '2024-09-01',
+    // Series-wide rather than tied to one edition, and old enough that the edition it was
+    // written for has passed. The hackathons page still tells applicants to read it.
+  },
+  {
     id: 'src-baselhack-event',
     url: 'https://www.baselhack.ch/event',
     title: 'BaselHack Event 2026 - details about dates, venue',
@@ -226,10 +236,29 @@ const events: EventSeed[] = [
     prizeCurrency: 'EUR',
     prizeIsCash: {
       value: 'yes',
-      note: '"compete for cash prizes up to 9,000 EUR (1st: 5,000, 2nd: 3,000, 3rd: 1,000) plus 6 months of mentoring"',
-      basis: 'src-cassini-site',
+      note: 'Cash, but only at the second stage. The hackathons page advertises "cash prizes up to 9,000 EUR (1st: 5,000, 2nd: 3,000, 3rd: 1,000)"; the Rules of Contest say "No monetary prize will be awarded in the first stage (Local Hackathons) by EUSPA." Only the top team from each of the ten cities reaches the European Finals where that money is awarded.',
+      basis: 'src-cassini-rules',
     },
-    // free, studentsOnly, travelCovered, accommodation: the page never says. Left at "not stated".
+    studentsOnly: {
+      value: 'no',
+      note: '"participation in the contest shall be open on equal terms to all economic operators (natural and legal persons) registering both as individuals or as a team, established in the territory of the Member States of the European Union and non-EU countries associated to the Horizon Europe". Natural persons must be 18 by the date of submission.',
+      basis: 'src-cassini-rules',
+    },
+    free: {
+      value: 'not-stated',
+      note: 'Neither the hackathons page nor the seventeen-page Rules of Contest mentions a participation fee, in either direction.',
+      basis: 'src-cassini-rules',
+    },
+    travelCovered: {
+      value: 'not-stated',
+      note: 'The Rules of Contest cover organisational costs and prize payments and say nothing about participant travel.',
+      basis: 'src-cassini-rules',
+    },
+    accommodation: {
+      value: 'not-stated',
+      note: 'Not mentioned. The ten local hackathons are run by separate local organisers, and their arrangements are not covered by the series rules.',
+      basis: 'src-cassini-rules',
+    },
   },
   {
     id: 'evt-baselhack-2026',
@@ -261,6 +290,21 @@ const events: EventSeed[] = [
     prizeIsCash: {
       value: 'not-stated',
       note: 'The site promises "Great prices for winners" and "fantastic prize money" but never states a figure. The 25,000-35,000 CHF that circulates is the sponsorship budget for venue, catering and prizes - not the prize pot.',
+      basis: 'src-baselhack-home',
+    },
+    studentsOnly: {
+      value: 'no',
+      note: '"Everyone is welcome at BaselHack!" - alongside developers the site asks for "people with skills in project management, UX/UI design, illustration, communication, and pitching ideas".',
+      basis: 'src-baselhack-home',
+    },
+    accommodation: {
+      value: 'yes',
+      note: 'Floor space rather than a bed: "Bring your sleeping bag" and "We have got you covered with a place where you can sleep a few hours." Food is separate and free - "Free Food, Snacks + Drinks".',
+      basis: 'src-baselhack-home',
+    },
+    travelCovered: {
+      value: 'not-stated',
+      note: 'Nothing on the site mentions travel costs. It is pitched at Basel, north-western Switzerland and neighbouring Alsace and Sudbaden, so most participants are local.',
       basis: 'src-baselhack-home',
     },
   },
@@ -301,6 +345,11 @@ const events: EventSeed[] = [
       note: '"fantastic prizes" for top performers; no figure and no form given.',
       basis: 'src-odoo-register',
     },
+    studentsOnly: {
+      value: 'not-stated',
+      note: 'No restriction is stated. The organisers reserve the right to "refuse or accept any participation request", which is discretion rather than a rule you can check yourself.',
+      basis: 'src-odoo-register',
+    },
   },
   {
     id: 'evt-power-of-europe-amsterdam',
@@ -322,7 +371,22 @@ const events: EventSeed[] = [
     },
     travelCovered: {
       value: 'yes',
-      note: 'Only for winners, and only onward: "Selected top performers invited to Build Europe Hackathon in Zurich with all-expenses-paid trips."',
+      note: 'Only for winners, and only onward: "Selected top performers invited to Build Europe Hackathon in Zurich with all-expenses-paid trips." Nothing is offered for getting to Amsterdam in the first place.',
+      basis: 'src-poe-luma',
+    },
+    free: {
+      value: 'not-stated',
+      note: 'No ticket price appears anywhere on the listing. It is a private event with a "Join Waitlist" button and acceptance by email, so the cost - if any - is only visible after you are let in.',
+      basis: 'src-poe-luma',
+    },
+    studentsOnly: {
+      value: 'not-stated',
+      note: 'The page says "100 builders" and nothing about who qualifies as one.',
+      basis: 'src-poe-luma',
+    },
+    accommodation: {
+      value: 'not-stated',
+      note: 'Not mentioned. The venue address is given but nothing about staying over.',
       basis: 'src-poe-luma',
     },
   },
@@ -337,6 +401,18 @@ const statements: StatementSeed[] = [
     source: 'src-junction-site',
     verdict: 'accepted',
     verdictNote: 'The organiser says it on two of their own surfaces, and they agree.',
+  },
+  {
+    // Recorded verbatim because the knowledge base entry normalises the currency
+    // symbol to "EUR", and an agent quoting the entry quotes the normalisation.
+    id: 'stm-junction-prize-site',
+    event: 'evt-junction-2026',
+    field: 'prize',
+    quote: '€100,000 In prizes across the weekend. Full prize breakdown coming soon.',
+    source: 'src-junction-site',
+    verdict: 'accepted',
+    verdictNote:
+      'The largest prize figure in this dataset, and the page never says how much of it is cash. "Coming soon" has been on the page since the read date.',
   },
   {
     id: 'stm-junction-applyby-platform',
@@ -379,10 +455,11 @@ const statements: StatementSeed[] = [
     event: 'evt-junction-2026',
     field: 'status',
     quote:
-      'dev.events lists five tech hackathons for the whole of Europe. Junction - 2,000 builders, 100,000 EUR in prizes - is not one of them.',
+      'Hackaton: Agentic Dollars on Bitcoin + Local AI, Oct 17-18, Turin. Hack Apertus Liebefeld, Oct 18-19, Bern. BaselHack 2026, Oct 30-Nov 1, Basel. Odoo Hackathon #6, Nov 20-22, Ramillies. Barcelona Hackathon 2026, Dec 11-13, Barcelona.',
     source: 'src-devevents-eu',
     verdict: 'incorrect',
-    verdictNote: 'Absence is the failure mode nobody checks for: the listing looks complete.',
+    verdictNote:
+      'The whole of Europe, according to this page, on 20 September 2026. Junction is not on it - 2,000 builders, 100,000 EUR in prizes, three weeks after the last event listed. Absence is the failure mode nobody checks for, because the list looks complete.',
   },
   {
     id: 'stm-junction-missing-hackathoncom',
@@ -391,17 +468,8 @@ const statements: StatementSeed[] = [
     quote: "There is no upcoming hackathons found in 'Europe'",
     source: 'src-hackathoncom-europe',
     verdict: 'incorrect',
-    verdictNote: 'Said flatly, on 20 September 2026, with at least fifteen of them open.',
-  },
-  {
-    id: 'stm-baselhack-dates-event',
-    event: 'evt-baselhack-2026',
-    field: 'dates',
-    quote: 'The page shows a countdown and no dates at all.',
-    source: 'src-baselhack-event',
-    verdict: 'incorrect',
     verdictNote:
-      'The page called "Event" is the one page on the site that never states the dates. They are on the homepage and in a blog post instead.',
+      'Said flatly, on 20 September 2026. A survey of five listing sites that day - recorded in the project README - turned up fifteen candidate events; this dataset models five of them.',
   },
   {
     id: 'stm-baselhack-dates-savethedate',
@@ -410,6 +478,8 @@ const statements: StatementSeed[] = [
     quote: 'October 30 - November 1, 2026 (Friday evening to Sunday afternoon)',
     source: 'src-baselhack-savethedate',
     verdict: 'accepted',
+    verdictNote:
+      'From a blog post. The page actually called "Event" carries a countdown and no dates at all, which is where anyone would look first.',
   },
   {
     id: 'stm-baselhack-prize-home',
@@ -467,6 +537,38 @@ const statements: StatementSeed[] = [
     quote: 'Odoo S.A., Rue des Bourlottes 9, 1367 Grand-Rosiere (Farm 2), Belgium',
     source: 'src-odoo-register',
     verdict: 'accepted',
+  },
+  {
+    id: 'stm-cassini-prize-site',
+    event: 'evt-cassini-12',
+    field: 'prize',
+    quote: 'compete for cash prizes up to 9,000 EUR (1st: 5,000, 2nd: 3,000, 3rd: 1,000) plus 6 months of mentoring',
+    source: 'src-cassini-site',
+    verdict: 'superseded',
+    verdictNote:
+      'True of the European Finals only. Read on its own it suggests that turning up to your local hackathon puts you in the running for 9,000 EUR, and the Rules of Contest say otherwise.',
+  },
+  {
+    id: 'stm-cassini-prize-rules',
+    event: 'evt-cassini-12',
+    field: 'prize',
+    quote:
+      'No monetary prize will be awarded in the first stage (Local Hackathons) by EUSPA. In case local organisers and/or other partners decide to award monetary prizes following the Local Hackathons and based on the outcome thereof, such prize shall not be confused with the Hackathon Prize nor considered in any way as a Prize awarded by EUSPA.',
+    source: 'src-cassini-rules',
+    verdict: 'accepted',
+    verdictNote:
+      'One team per city reaches the finals. For everyone else there is no EUSPA money at all, whatever a local organiser may hand out.',
+  },
+  {
+    id: 'stm-cassini-eligibility-rules',
+    event: 'evt-cassini-12',
+    field: 'eligibility',
+    quote:
+      'participation in the contest shall be open on equal terms to all economic operators (natural and legal persons) registering both as individuals or as a team, established in the territory of the Member States of the European Union and non-EU countries associated to the Horizon Europe or countries which are in ongoing negotiations for an association agreement. Natural person applicants must be at least of 18 years of age by the date of submission of the application.',
+    source: 'src-cassini-rules',
+    verdict: 'accepted',
+    verdictNote:
+      'Not on the hackathons page, which says only that applicants should "review the Rules of Contest before applying" - seventeen pages away.',
   },
   {
     id: 'stm-poe-prize-luma',

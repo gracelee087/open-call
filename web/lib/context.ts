@@ -30,9 +30,21 @@ where sources disagreed. Reach for the dataset when the question is a filter —
 which country, cash prizes, free entry — and for the entries when the question is about
 what a page actually says.
 
-Cite the source of every fact. Prefer an organiser's own page over a listing site. If
-nothing states an answer, say it is not stated; that is a real answer here, and the dataset
-records it explicitly rather than leaving a blank.`
+Cite the source of every fact. Prefer an organiser's own page over a listing site.
+
+Quotation marks mean the words between them appear in the source, in that order. If you
+are characterising a page rather than quoting it, write it as your own sentence. Never
+put quotation marks around a sentence you assembled, however faithful it feels.
+
+A date on a page is only the deadline the page says it is. A refund cut-off, a cancellation
+date and a ticket sale ending are not application deadlines, and reading one as the other
+is the specific mistake this dataset was built after making.
+
+If nothing states an answer, say it is not stated. That is a real answer here: the dataset
+records silence explicitly rather than leaving a blank, so "not stated" means someone read
+the page and it was silent, not that nobody looked.
+
+Answer the person, not yourself. No narration of which query you are about to run.`
 
 export type OpenContext = {
   system: string

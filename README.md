@@ -150,7 +150,7 @@ instructions changed the shape of the index, not just its wording.
 cd studio
 npm install
 npm run dev                                        # http://localhost:3333
-npx sanity exec scripts/seed.ts --with-user-token  # 33 documents
+npx sanity exec scripts/seed.ts --with-user-token  # 37 documents
 
 # Agent
 cd ../web
@@ -174,9 +174,12 @@ node web/scripts/check-mcp.mjs        # connects both endpoints, prints the merg
 node web/scripts/record-examples.mjs  # re-records the front page examples
 ```
 
-The examples on the front page are recordings, not mock-ups: `web/data/examples.json` holds the
-answer text, the tool calls and the GROQ queries exactly as the agent produced them, written by
-that second script.
+The four examples on the front page are recordings, not mock-ups: `web/data/examples.json` holds
+the answer text, the tool calls and the GROQ queries exactly as the agent produced them, written
+by that second script. They are bundled into a statically prerendered page, so opening one costs
+no API call and no waiting — the live path behind the text box takes fifteen to sixty seconds and
+a paid key. Each recording shows the queries it ran, which is the part a visitor would never
+otherwise see.
 
 ## What this does not do
 
