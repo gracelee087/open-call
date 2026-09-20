@@ -1,0 +1,125 @@
+{
+  "recordedAt": "2026-09-20",
+  "model": "claude-sonnet-5",
+  "note": "Unedited. Answer text, tool calls and queries exactly as the agent produced them.",
+  "examples": [
+    {
+      "question": "Which of these can I still apply to, and what is the deadline?",
+      "answer": "Based on the dataset (for what's still open / deadlines) and the knowledge base (for what the pages actually say), here's the picture for each of the five events:\n\n**Junction 2026 (Helsinki/Espoo, Nov 13–15) — still open, deadline Oct 25, 2026**\n- Junction's own site: \"Applications close - Midnight 25.10.2026 GMT+03\" [Junction official site, junction 2026 page].\n- Junction's own application platform: \"Registration Deadline: 25 Oct 2026, 22:55\" [hackjunction.app].\n- These two organiser-controlled surfaces agree (dataset verdict: **accepted**), and both were read on 2026-09-20, before the deadline — so this one is confirmed still open.\n- Note: travel grants for international applicants are already **closed** (\"Travel grants applications have been closed for international participants\") — that's a separate, superseded claim on the official site that still describes grants as \"available.\"\n\n**CASSINI Hackathon #12 (10 cities across Europe, 27–29 Nov 2026) — deadline not stated**\n- No source in the dataset or knowledge base gives an application closing date. Registration/submission happens via the TAIKAI platform at cassini.eu/hackathons, and the Rules of Contest describe submission cutoffs *during* the hackathon weekend (15:00 on the last day of the local event), not a pre-event application deadline. So: not stated whether/when applications close.\n\n**BaselHack 2026 (Basel, Oct 30–Nov 1) — deadline not stated**\n- The organiser's own pages describe the event (free, 120-participant cap, mandatory Friday/Sunday sessions) but no source states an application or registration deadline.\n\n**Odoo Hackathon #6 (Grand-Rosière, Belgium, Nov 20–22) — deadline unclear, treat as not reliably stated**\n- The only figure resembling a cutoff is \"cancellation after November 13, the deposit will not be refunded\" from Odoo's own registration page — but the dataset carries a second, conflicting quote from the *same* source: \"cancellations before November 14 [get a] full refund... after November 14, the deposit will be retained\" (this second version is the one marked **accepted**; the Nov 13 version is marked **unresolved**). Either way, this is a *cancellation/refund* cutoff, not an explicit statement that applications close on that date. I'd treat \"applications close Nov 13\" as an inference, not a confirmed fact — the true application deadline is not clearly stated.\n\n**Power of Europe — Amsterdam (18 Oct 2026) — deadline not stated**\n- The source itself flags this explicitly: \"Application deadline... [is] not covered by any available source\" [dataset entry, event page].\n\n**Bottom line:** Of the five, only **Junction 2026** has a confirmed, organiser-agreed application deadline — **October 25, 2026** — and as of the most recent read date (Sept 20, 2026) it is still open. The other four don't have a stated deadline anywhere in the sources gathered; for Odoo there's a same-source internal contradiction about a Nov 13/14 date that concerns deposit refunds, not applications, so I wouldn't cite it as the application cutoff.",
+      "tools": [
+        {
+          "name": "groq_query",
+          "input": {
+            "query": "*[_type == \"event\"]{_id, name, series, year, \"applyByStatements\": *[_type==\"statement\" && references(^._id) && field==\"applyBy\"]{quote, verdict, verdictNote, \"source\": source->{title, publisher, kind, url, publishedOn, readOn}}}"
+          }
+        },
+        {
+          "name": "groq_query",
+          "input": {
+            "query": "*[_type == \"event\"]{name, \"statements\": *[_type==\"statement\" && references(^._id)]{field, quote, verdict, \"source\": source->{publisher, kind}}}"
+          }
+        },
+        {
+          "name": "knowledge_base_read",
+          "input": {
+            "paths": [
+              "events/cassini/edition_12",
+              "events/power_of_europe",
+              "events/baselhack/event_2026",
+              "events/odoo"
+            ]
+          }
+        },
+        {
+          "name": "knowledge_base_read",
+          "input": {
+            "knowledgeBase": "kbFmPO9HVpQh",
+            "paths": [
+              "events/cassini/edition_12",
+              "events/power_of_europe",
+              "events/baselhack/event_2026",
+              "events/odoo"
+            ]
+          }
+        },
+        {
+          "name": "groq_query",
+          "input": {
+            "query": "*[_type==\"statement\" && quote match \"*13 November*\"]{field, quote, verdict, event->{name}, source->{title, publisher, kind, url}}"
+          }
+        },
+        {
+          "name": "groq_query",
+          "input": {
+            "query": "*[_type==\"source\" && title match \"*odoo*free*register*\" || publisher==\"Odoo S.A.\"]{title, url, kind, publisher}"
+          }
+        }
+      ],
+      "seconds": 56.5
+    },
+    {
+      "question": "Is Odoo Hackathon #6 actually free?",
+      "answer": "## Short answer: Yes — effectively free, but not a €0 ticket\n\nAccording to Odoo's own registration platform (the organiser's page, odoo.com/event/hackathon-6-edition-12473/register), attendance is recorded as **free**, but there's a nuance:\n\n- You pay a **deposit at sign-up**: €12 per person (solo) or €48 for a team of four.\n- That deposit is **fully refunded (VAT included) the day after the event**, provided you attend and follow the refund conditions (pay by card, not PayPal; provide bank details).\n- Cancel **before 14 November** → full refund. Cancel **after 14 November** → you forfeit the deposit.\n\nSo the dataset's structured \"free\" field is marked `\"value\": \"yes\"` — but the accompanying note is explicit that this is really a refundable deposit arrangement, not a free ticket outright, and flags that the page gives the cancellation cutoff in slightly inconsistent ways in two places.\n\n**Bottom line:** Odoo Hackathon #6 is \"free\" in the sense that you get your money back if you show up (or cancel early) — but you do need to front €12–48 upfront, and you lose it if you back out late or don't attend. I'd describe it to someone deciding between hackathons as \"refundable-deposit free,\" not \"genuinely no-cost like Junction or BaselHack.\"\n\nFor comparison: Junction and BaselHack are both stated as free entry with no deposit mechanism mentioned (per their own event pages in the knowledge base), so if a true zero-cost, zero-deposit hackathon matters to you, those are cleaner examples. Source: Odoo's own registration page (organiser platform) — trusted over any listing-site paraphrase, per the dataset's source hierarchy.",
+      "tools": [
+        {
+          "name": "groq_query",
+          "input": {
+            "query": "*[_type==\"event\" && name match \"Odoo*\"]{_id, name, \"freeStatement\": free, \"freeBasisQuote\": free.basis->quote, \"freeBasisSource\": free.basis->{title, publisher, kind, url}}"
+          }
+        },
+        {
+          "name": "knowledge_base_read",
+          "input": {
+            "knowledgeBase": "kbFmPO9HVpQh",
+            "paths": [
+              "events/odoo"
+            ]
+          }
+        }
+      ],
+      "seconds": 13
+    },
+    {
+      "question": "Which prizes are real cash?",
+      "answer": "Based on the dataset (cross-checked against organiser pages), across the 5 tracked events only **one** has confirmed cash prizes:\n\n**✅ Cash — CASSINI Hackathon #12 (EU Space for Peace and Resilience)**\n- Official site (cassini.eu/hackathons): \"compete for cash prizes up to 9,000 EUR (1st: 5,000, 2nd: 3,000, 3rd: 1,000) plus 6 months of mentoring.\" This explicitly uses the word \"cash,\" so it's marked `yes` in the dataset. (KB entry `events/cassini/edition_12` corroborates the same figures.)\n\n**❌ Not cash — Power of Europe (Amsterdam, 18 Oct 2026)**\n- Its own event page (luma.com/iv9uovum, organiser Tech Makers/Build Europe) says: \"Top 3 teams receive credits from partner companies (Orq AI, Mistral, Weaviate, Koyeb, Kilocode AI). First place: 7,800 EUR+ in combined credits...\" That's explicitly partner **credits**, not cash — the dataset flags this as `no` with the note \"A 7,800 EUR headline with no cash in it.\" Winners also get a paid trip to the Build Europe Zurich hackathon, but that's travel support, not cash either.\n\n**❓ Not stated whether cash — the other three:**\n- **Junction 2026**: \"100,000 EUR in prizes\" with \"full prize breakdown coming soon\" — official site never says how much (if any) is cash. Recorded as `not-stated`.\n- **BaselHack 2026**: Official site only promises \"fantastic prize money\" / \"great prizes for winners\" with no figure or form specified. Any number circulating elsewhere (e.g. a 25,000–35,000 CHF figure) is actually the sponsorship budget for venue/catering/prizes, not a prize pot — so treat that as stale/misleading rather than a competing cash claim. Recorded as `not-stated`.\n- **Odoo Hackathon #6**: Registration page only mentions \"fantastic prizes\" for top performers — no amount, no form. Recorded as `not-stated`.\n\n**Bottom line:** Of the five events, CASSINI is the only one explicitly confirmed as cash prizes. Power of Europe explicitly is *not* cash (partner credits). Junction, BaselHack, and Odoo simply don't state whether their prizes are cash — that's a real gap in the sources, not an assumption of \"no.\"",
+      "tools": [
+        {
+          "name": "groq_query",
+          "input": {
+            "query": "*[_type==\"event\"]{name, year, \"prizeIsCash\": prizeIsCash, \"prizeIsCashBasis\": prizeIsCash.basis->{title,url,kind}, \"prizeStatements\": *[_type==\"statement\" && event._ref==^._id && field==\"prize\"]{quote, verdict, verdictNote, \"source\": source->{title,url,kind,publisher}}}"
+          }
+        },
+        {
+          "name": "schema_explorer",
+          "input": {
+            "type": "event",
+            "path": "prizeIsCash"
+          }
+        }
+      ],
+      "seconds": 14.4
+    },
+    {
+      "question": "What do the listing sites get wrong?",
+      "answer": "## What the listing sites get wrong\n\nThere are four documented cases, three of them clear-cut errors and one a minor ambiguity:\n\n**1. hackathon.com — false \"nothing found\" result**\nOn 20 September 2026, hackathon.com's Europe listing returned *\"There is no upcoming hackathons found in 'Europe'\"* — while at least fifteen European hackathons were actually open at that moment. This is a flat negative masquerading as a fact. **Do not trust a null result from hackathon.com as evidence that nothing exists** — it's a data gap, not an accurate absence. *(Source: dataset statement, hackathon.com — \"Hackathons in Europe\")*\n\n**2. dev.events — silently omits Junction**\ndev.events' \"Tech hackathons in Europe 2026/2027\" list names five events for the whole of Europe and simply leaves out Junction — a hackathon with 2,000 builders and a €100,000 prize pool. The list looks complete but isn't. **When a major event is missing from an aggregator, the aggregator is wrong, not the event.** *(Source: dataset statement, dev.events)*\n\n**3. Wikipedia — stale dates for Junction**\nWikipedia's Junction article, last edited 3 June 2026, still describes the *2025* edition, giving dates of 14–16 November. Junction 2026 actually runs **13–15 November** — one day earlier. It's a near-miss error of exactly the kind that gets silently copied elsewhere. **Always verify Junction's dates against the official site, not Wikipedia.** *(Source: dataset statement, Wikipedia — \"Junction (hackathon)\")*\n\n**4. dev.events — imprecise venue for Odoo Hackathon #6 (minor/unresolved)**\ndev.events lists the venue as \"Ramillies, Belgium.\" This isn't technically false — Grand-Rosière is part of the Ramillies municipality — but it's not specific enough to navigate to. The official address is Rue des Bourlottes 9, 1367 Grand-Rosière. This one is flagged as \"unresolved\" rather than outright wrong. *(Source: dataset statement, dev.events)*\n\n**Bottom line / trust hierarchy:** Prefer the organiser's own site first (though even that can split info across pages, e.g. BaselHack's `/event` page shows only a countdown with no dates — check the homepage/blog instead). Aggregators are unreliable for *completeness* (they omit or falsely nullify), and Wikipedia/third-party sources are unreliable for *currency* (they lag and describe past editions). This guidance comes from the dataset's `source_reliability` entry, cross-checked against the matching statement records.",
+      "tools": [
+        {
+          "name": "knowledge_base_read",
+          "input": {
+            "knowledgeBase": "kbFmPO9HVpQh",
+            "paths": [
+              "source_reliability"
+            ]
+          }
+        },
+        {
+          "name": "groq_query",
+          "input": {
+            "query": "*[_type == \"statement\" && source->kind in [\"aggregator\",\"third-party\"]]{field, quote, verdict, verdictNote, \"source\": source->title, \"publisher\": source->publisher, \"event\": event->name}"
+          }
+        }
+      ],
+      "seconds": 14.3
+    }
+  ]
+}

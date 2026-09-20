@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.next/
+*.tsbuildinfo
+
+.env*
+*.local
+.vercel/
+
+# private working notes, not part of the submission
+PLAN.md
+HANDOFF.md
