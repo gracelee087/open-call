@@ -23,7 +23,12 @@ export async function POST(request: Request) {
     // Reading an entry usually leads to a second look somewhere else; give it room
     // to follow that without letting it wander.
     stopWhen: stepCountIs(10),
-    onFinish: () => context.close(),
+    // Browsers cancel these: a visitor navigates away mid-answer, or presses stop.
+    // Without the signal and onAbort, both MCP connections stay open for the life of
+    // the process, because neither onEnd nor onError fires on an abort.
+    abortSignal: request.signal,
+    onEnd: () => context.close(),
+    onAbort: () => context.close(),
     onError: () => context.close(),
   })
 

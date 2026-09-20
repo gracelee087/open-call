@@ -1,5 +1,6 @@
 import {defineType, defineField} from 'sanity'
 import {LinkIcon} from '@sanity/icons/Link'
+import {isUnique} from './isUnique'
 
 /**
  * One document we read. Not one website — one page.
@@ -17,7 +18,12 @@ export const source = defineType({
     defineField({
       name: 'url',
       type: 'url',
-      validation: (rule) => rule.required(),
+      validation: (rule) =>
+        rule.required().custom(async (url, context) =>
+          !url || (await isUnique('url', url, context))
+            ? true
+            : 'Another source already records this page. Edit that one instead - the seed matches sources by url, and two would fight over it.',
+        ),
     }),
     defineField({
       name: 'title',

@@ -3,13 +3,27 @@
  *
  * Run:  npx sanity exec scripts/seed.ts --with-user-token
  *
- * Idempotent: every document has a deterministic _id, so re-running updates in place
- * rather than piling up duplicates. Claims left out of an event stay "not stated",
- * which is the honest reading of a page that never mentions them.
+ * Idempotent by content rather than by id: Sanity assigns every _id, and a re-run finds
+ * the document again by what it says it is - a source is its url, an event is its slug.
+ *
+ * The three queries below are the only GROQ in the project that runs against the dataset
+ * directly, so they are the only place TypeGen has anything to type. Their result types
+ * are generated from the schema by `npm run typegen` and imported below, which is what
+ * keeps this script honest when a field is renamed.
  */
 import {getCliClient} from 'sanity/cli'
+import {defineQuery} from 'groq'
+import type {
+  SourceIdsQueryResult,
+  EventIdsQueryResult,
+  StatementIdsQueryResult,
+} from './sanity.types'
 
 const client = getCliClient({apiVersion: '2024-01-01'})
+
+const sourceIdsQuery = defineQuery(`*[_type == "source"]{_id, url}`)
+const eventIdsQuery = defineQuery(`*[_type == "event"]{_id, "slug": slug.current}`)
+const statementIdsQuery = defineQuery(`*[_type == "statement"]._id`)
 
 const READ_ON = '2026-09-20'
 
@@ -600,9 +614,7 @@ async function run() {
   // inventing ids that encode what the documents already say.
   const realId = new Map<string, string>()
 
-  const existingSources: {_id: string; url: string}[] = await client.fetch(
-    `*[_type == "source"]{_id, url}`,
-  )
+  const existingSources: SourceIdsQueryResult = await client.fetch(sourceIdsQuery)
   const sourceIdByUrl = new Map(existingSources.map((d) => [d.url, d._id]))
 
   for (const s of sources) {
@@ -622,9 +634,7 @@ async function run() {
     realId.set(s.id, id)
   }
 
-  const existingEvents: {_id: string; slug?: string}[] = await client.fetch(
-    `*[_type == "event"]{_id, "slug": slug.current}`,
-  )
+  const existingEvents: EventIdsQueryResult = await client.fetch(eventIdsQuery)
   const eventIdBySlug = new Map(existingEvents.filter((d) => d.slug).map((d) => [d.slug!, d._id]))
 
   for (const e of events) {
@@ -668,7 +678,7 @@ async function run() {
   }
 
   // Statements are derived records with no identity of their own: every run replaces them.
-  const stale: string[] = await client.fetch(`*[_type == "statement"]._id`)
+  const stale: StatementIdsQueryResult = await client.fetch(statementIdsQuery)
   const tx = client.transaction()
   for (const id of stale) tx.delete(id)
   for (const s of statements) {

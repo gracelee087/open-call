@@ -52,36 +52,64 @@ export type OpenContext = {
   close: () => Promise<void>
 }
 
+type Client = Awaited<ReturnType<typeof createMCPClient>>
+
+const closeAll = async (clients: Client[]) => {
+  await Promise.allSettled(clients.map((client) => client.close()))
+}
+
 export async function openContext(): Promise<OpenContext> {
   const token = process.env.SANITY_API_READ_TOKEN
   if (!token) throw new Error('SANITY_API_READ_TOKEN is not set')
 
   const headers = {Authorization: `Bearer ${token}`}
 
-  const opened = await Promise.all(
-    ENDPOINTS.map(async (name) => {
-      const url = base(name)
+  // Open both connections before anything can throw, and settle rather than race: if one
+  // endpoint fails while the other has already connected, the survivor still has to be
+  // closed. Nothing else holds a reference to it.
+  const settled = await Promise.allSettled(
+    ENDPOINTS.map((name) =>
+      createMCPClient({transport: {type: 'http', url: base(name), headers}}),
+    ),
+  )
+  const clients = settled.flatMap((r) => (r.status === 'fulfilled' ? [r.value] : []))
 
-      const [initialContext, client] = await Promise.all([
-        fetch(`${url}/initial-context`, {headers}).then((res) => {
+  try {
+    const failed = settled.findIndex((r) => r.status === 'rejected')
+    if (failed !== -1) {
+      throw new Error(
+        `${ENDPOINTS[failed]}: ${(settled[failed] as PromiseRejectedResult).reason}`,
+      )
+    }
+
+    const [initialContexts, toolSets] = await Promise.all([
+      Promise.all(
+        ENDPOINTS.map(async (name) => {
+          const res = await fetch(`${base(name)}/initial-context`, {headers})
           if (!res.ok) throw new Error(`${name}: initial-context ${res.status}`)
           return res.text()
         }),
-        createMCPClient({transport: {type: 'http', url, headers}}),
-      ])
+      ),
+      Promise.all(
+        clients.map(async (client) =>
+          Object.fromEntries(
+            Object.entries(await client.tools()).filter(([name]) => name !== 'initial_context'),
+          ),
+        ),
+      ),
+    ])
 
-      const tools = Object.fromEntries(
-        Object.entries(await client.tools()).filter(([name]) => name !== 'initial_context'),
-      )
-      return {initialContext, tools, client}
-    }),
-  )
+    // streamText can reach onEnd, onError and onAbort for the same request, so closing
+    // has to be safe to call more than once.
+    let closing: Promise<void> | null = null
 
-  return {
-    system: [PREAMBLE, ...opened.map((o) => o.initialContext)].join('\n\n---\n\n'),
-    tools: Object.assign({}, ...opened.map((o) => o.tools)),
-    close: async () => {
-      await Promise.all(opened.map((o) => o.client.close()))
-    },
+    return {
+      system: [PREAMBLE, ...initialContexts].join('\n\n---\n\n'),
+      tools: Object.assign({}, ...toolSets),
+      close: () => (closing ??= closeAll(clients)),
+    }
+  } catch (error) {
+    await closeAll(clients)
+    throw error
   }
 }

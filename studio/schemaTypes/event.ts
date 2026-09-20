@@ -1,3 +1,4 @@
+import {isUnique} from './isUnique'
 import {defineType, defineField, defineArrayMember} from 'sanity'
 import {CalendarIcon} from '@sanity/icons/Calendar'
 import type {SourcedClaimValue} from './sourcedClaim'
@@ -45,7 +46,11 @@ export const event = defineType({
     defineField({
       name: 'slug',
       type: 'slug',
-      options: {source: 'name', maxLength: 96},
+      options: {
+        source: 'name',
+        maxLength: 96,
+        isUnique: (value, context) => isUnique('slug.current', value, context),
+      },
       group: 'identity',
       validation: (rule) => rule.required(),
     }),

@@ -11,7 +11,8 @@ export default defineCliConfig({
     enabled: true,
     path: './scripts/**/*.ts',
     schema: 'schema.json',
-    generates: '../web/sanity.types.ts',
+    /** Generated next to the only code that queries the dataset directly. */
+    generates: './scripts/sanity.types.ts',
     overloadClientMethods: true,
   },
   deployment: {
