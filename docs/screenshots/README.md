@@ -1,19 +1,49 @@
 # Screenshots
 
-Saved here so they survive the session. The ones marked 🔴 cannot be retaken:
-a Knowledge Base issue disappears from the list once it is resolved.
+Judges cannot open the Studio or the Context app — `open-call-eu.sanity.studio` redirects
+non-members to a login, and the Context screens are behind the organisation. These images are
+the only way anyone sees that half of the work, which is most of criterion 3.
 
-| # | Shot | When | Status |
+Save each as `NN-short-name.png` in this folder.
+
+| # | Shot | Where to take it | Status |
 |---|---|---|---|
-| 1 | Studio blocks a stated value with no source | task 1 | |
-| 2 | Event form, both field groups | task 1 | |
-| 3 | Several statements disagreeing on one event | task 2 | |
-| 4 | An event where most claims are "not stated" | task 2 | |
-| 5 | KB Sources tab | task 3 | |
-| 6 | KB Entries tab (the outline) | task 3 | |
-| 7 | 🔴 KB Issues tab — BEFORE resolving anything | task 3 | |
-| 8 | 🔴 An issue in detail: both claims side by side with sources | task 3 | |
-| 9 | 🔴 Instructions tab, right after resolving the issue | task 3 | |
-| 10 | Agent tool-call trace | task 4 | |
-| 11 | An answer citing its sources | task 5 | |
-| 12 | Deployed Studio + Dashboard listing it | task 6 | |
+| 1 | Studio blocks a stated value with no source | | |
+| 2 | Event form, both field groups | | |
+| 3 | Several statements disagreeing on one event | | |
+| 4 | An event where most claims are "not stated" | | |
+| 5 | KB Sources tab | Context → open-call → Sources | |
+| 6 | KB Entries tab, the outline | Context → open-call → Entries | |
+| 7 | KB Issues, the Odoo conflict | Context → Issues → Resolved | |
+| 8 | The issue in detail: both dates side by side | click into that issue | |
+| 9 | Instructions tab, all six | Context → Instructions | |
+| 10 | Agent tool-call trace | localhost:3000, click an example | |
+| 11 | An answer citing its sources | same, scroll to the citations | |
+| 12 | Deployed Studio + Dashboard listing it | manage.sanity.io | |
+
+## How to take the ones that need a note
+
+**1 — the validation error.** Studio → Events → Junction 2026 → the *Free to enter* claim. Set
+the value to **Yes** and clear the *Where this was read* reference. The form refuses to publish:
+
+> A stated value needs a source. Either set it to "Not stated in the source", or say where you
+> read it.
+
+Screenshot the red message, then press undo. This is the schema enforcing the product's one
+promise, so it is the single most useful image in the set.
+
+**4 — the silences.** Open **Hackathon Power of Europe — Amsterdam**. Four of its five claims are
+*Not stated in the source*, each still pointing at the Luma page it was read on. That is the
+three-value design doing its job: the page was read, and it was silent.
+
+**7 to 9 — the Context app.** Earlier I said a resolved issue disappears. It does not — it moves
+to **Resolved** and carries a "Reopen and change your mind" button, so these are not urgent. The
+Odoo issue is the one the build found on its own: the registration page contradicts itself about
+the cancellation cut-off, 13 November in one place and 14 November in another.
+
+**10 and 11 — the agent.** The four examples on the front page are recordings and open instantly,
+so no API key is needed for these. Expand *the queries it ran* underneath an answer before
+shooting 10 — the GROQ is the evidence that the answer did not come from a keyword search.
+
+**12 — the deployment.** Both the Studio URL and the Dashboard entry showing this project, so it
+is clear the dataset is real and hosted rather than local.
