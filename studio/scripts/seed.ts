@@ -220,7 +220,7 @@ const events: EventSeed[] = [
     },
     prizeIsCash: {
       value: 'not-stated',
-      note: '"100,000 EUR In prizes" across the weekend, and "Full prize breakdown coming soon." The page never says how much of it is cash.',
+      note: '"€100,000 In prizes across the weekend. Full prize breakdown coming soon." The page never says how much of it is cash.',
       basis: 'src-junction-site',
     },
   },
