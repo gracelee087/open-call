@@ -1,34 +1,22 @@
 {
-  "recordedAt": "2026-09-20",
+  "recordedAt": "2026-09-21",
   "model": "claude-sonnet-5",
   "note": "Unedited. Answer text, tool calls and queries exactly as the agent produced them.",
   "examples": [
     {
       "question": "Which of these can I still apply to, and what is the deadline?",
-      "answer": "Here's what the dataset and organiser pages actually say about application deadlines, as of the 20 September 2026 read date — plus where I have to say \"not stated\" rather than guess.\n\n**Junction 2026 — open, deadline 25 October 2026 (midnight, GMT+3)**\nThis is the only event with a stated, agreed-upon application deadline. Junction's own site says \"Applications close - Midnight 25.10.2026 GMT +03,\" and the separate application platform (hackjunction.app) independently says \"Registration Deadline: 25 Oct 2026, 22:55\" — same moment, two of the organiser's own surfaces agreeing. Both are marked accepted in the dataset, and since the read date (20 Sep 2026) is before that deadline, applications are open. (Note: this is separate from Junction's travel-grant deadline, which already closed 6 September 2026 — don't conflate the two.)\n\n**BaselHack 2026 — no application deadline stated**\nNeither the organiser's pages nor the dataset state an application/registration deadline. BaselHack looks like straightforward registration rather than a reviewed-application process, but no cutoff date for signing up is given anywhere I can see.\n\n**CASSINI Hackathon #12 — no application deadline stated**\nRegistration happens on the TAIKAI platform via cassini.eu/hackathons, and the Rules of Contest specify plenty about eligibility and submission scoring, but no source states a deadline for applying/registering to a local hackathon. The one deadline that *is* stated is different: local-hackathon-weekend project submissions are due \"15:00 on the last day of the local hackathon weekend\" — that's a submission cutoff during the event, not an application deadline.\n\n**Odoo Hackathon #6 — no application deadline stated (and there's a trap here worth flagging)**\nThe registration page mentions November dates, but they're refund/cancellation cutoffs, not an application deadline: one section says \"In case of cancellation after November 13, the deposit will not be refunded\" while the Terms section says cancellations before November 14 get a full refund and after November 14 forfeit it. The dataset flags this 13-vs-14 conflict as unresolved and treats 14 November as the operative cancellation rule. Neither date is an application deadline — no source states when applications/registration for Odoo Hackathon #6 close.\n\n**Power of Europe (Amsterdam) — no application deadline stated**\nThe knowledge base explicitly notes the application deadline \"is not covered by any available source\" for this one — recorded as an open silence, not an oversight on my part.\n\n**Bottom line:** of these five, Junction 2026 is the only one with a confirmed, still-open application window — apply by 25 October 2026. For BaselHack, CASSINI, Odoo, and Power of Europe, no source states an application deadline at all, so I can't tell you whether or when applications close for them, only that the events themselves are still upcoming.",
+      "answer": "Based on the sources I have, here's the status for each event:\n\n## Junction 2026 — Yes, open, deadline **25 October 2026 (midnight, GMT+03)**\nThis is the only event in the set with an explicit, confirmed application deadline. It's stated identically on two of Junction's own surfaces:\n- The official site: \"Applications close - Midnight 25.10.2026 GMT +03\"\n- The application platform (hackjunction.app): \"Registration Deadline: 25 Oct 2026, 22:55\"\n\nBoth are organiser-controlled sources and agree, so this is accepted, not disputed. Apply at hackjunction.app/hackathons/junction-2026. Note: the separate travel-grant application deadline (6 September 2026) has already passed and is closed — don't confuse that with the main application deadline.\n\n## BaselHack 2026 — Open, no stated deadline\nBaselHack doesn't have an \"application\" step with a deadline — it's ticket-based registration via baselhack.ch/shop. As of the most recent update on their own blog, 50% of tickets had already been claimed, but no cutoff date is given. Practically, you can register until tickets run out or the event starts (30 Oct–1 Nov 2026).\n\n## Odoo Hackathon #6 — Open, no stated deadline\nNo application or registration deadline is stated anywhere on Odoo's own event page. Registrations are currently open. Don't mistake the **14 November** date for a deadline to apply — that's the cancellation cutoff for getting your deposit back if you drop out, not an application deadline.\n\n## CASSINI Hackathon #12 — Unclear for participants\nThe only application deadline mentioned in the sources concerns **local organisers**, and those applications are now closed. Nothing in the official CASSINI hackathon page or the Rules of Contest states a participant registration/application deadline — that would presumably be set by each of the 10 local organisers (Sofia, Prague, Espoo, Darmstadt, Dublin, Turin, Kaunas, Gdańsk, Bucharest, Ivano-Frankivsk) individually, but none of those local deadlines are stated in what I have. I can't tell you if or when participant applications close for this one.\n\n## Power of Europe Amsterdam — Open by waitlist, no stated deadline\nEntry is by waitlist request via the Luma listing, with acceptance by email. No precise application/registration deadline is stated on the public page. The event itself is on **18 October 2026**, so realistically any application would need to happen before then, but that's an inference from the event date, not a stated deadline.\n\n---\n\n**Bottom line:** Junction is the one with a firm, sourced deadline (25 Oct 2026). BaselHack, Odoo, and Power of Europe Amsterdam appear to still be accepting applicants but have no stated cutoff date. CASSINI's participant-facing deadline simply isn't stated anywhere I can see.",
       "tools": [
         {
           "name": "groq_query",
           "input": {
-            "query": "*[_type == \"event\"]{name, series, year, slug, officialUrl, applyBy, \"statements\": *[_type==\"statement\" && event._ref==^._id && field==\"applyBy\"]{quote, verdict, verdictNote, \"sourceTitle\": source->title, \"sourceKind\": source->kind, \"sourceUrl\": source->url, \"readOn\": source->readOn}}"
+            "query": "*[_type == \"statement\" && field == \"applyBy\"]{\n  _id,\n  \"event\": event->name,\n  field,\n  quote,\n  verdict,\n  verdictNote,\n  \"sourceTitle\": source->title,\n  \"sourceKind\": source->kind,\n  \"sourceUrl\": source->url,\n  \"publishedOn\": source->publishedOn,\n  \"readOn\": source->readOn\n}"
           }
         },
         {
           "name": "groq_query",
           "input": {
-            "query": "*[_type == \"statement\"]{field, quote, verdict, verdictNote, \"event\": event->name, \"sourceTitle\": source->title, \"sourceKind\": source->kind, \"readOn\": source->readOn}"
-          }
-        },
-        {
-          "name": "knowledge_base_read",
-          "input": {
-            "paths": [
-              "events/baselhack/event_2026",
-              "events/cassini/edition_12",
-              "events/odoo",
-              "events/power_of_europe",
-              "events/junction"
-            ]
+            "query": "*[_type == \"event\"]{name, series, year, slug, officialUrl, \"dates\": dates}"
           }
         },
         {
@@ -36,97 +24,55 @@
           "input": {
             "knowledgeBase": "kbFmPO9HVpQh",
             "paths": [
-              "events/baselhack/event_2026",
-              "events/cassini/edition_12",
+              "events/junction",
+              "events/baselhack/overview",
+              "events/cassini/event_overview",
+              "events/cassini/rules_and_eligibility",
               "events/odoo",
-              "events/power_of_europe",
-              "events/junction"
+              "events/power_of_europe_amsterdam"
             ]
-          }
-        },
-        {
-          "name": "groq_query",
-          "input": {
-            "query": "*[_type == \"source\" && title match \"*odoo*\"]{title, url, kind, publisher, publishedOn, readOn}"
-          }
-        },
-        {
-          "name": "groq_query",
-          "input": {
-            "query": "*[_type == \"source\"]{title, url, kind}"
-          }
-        },
-        {
-          "name": "groq_query",
-          "input": {
-            "query": "*[_type==\"statement\" && (_id match \"*odoo*\" || _id == \"stm-odoo-free-register\")]{_id, field, quote, \"event\": event->name, \"source\": source->title}"
-          }
-        },
-        {
-          "name": "groq_query",
-          "input": {
-            "query": "*[_type==\"statement\" && quote match \"*13 November*\"]{_id, field, quote, \"event\": event->name, \"source\": source->title, verdict}"
-          }
-        },
-        {
-          "name": "groq_query",
-          "input": {
-            "query": "*[_type==\"statement\" && event->name match \"*Odoo*\"]{_id, field, quote, \"event\": event->name, \"source\": source->title, verdict}"
           }
         }
       ],
-      "seconds": 80.4
+      "seconds": 34.1
     },
     {
       "question": "If I go to a CASSINI local hackathon, can I win the 9,000 EUR?",
-      "answer": "Not directly — winning at the local hackathon itself doesn't win you the €9,000.\n\nHere's how the money actually works, per the official Rules of Contest (EUSPA, \"Rules of Contest for the Cassini Hackathons Prize Contest\"):\n\n- **Stage 1 (Local Hackathon):** This is where you'd attend in person in one of the 10 cities (Sofia, Prague, Espoo, Darmstadt, Dublin, Turin, Kaunas, Gdańsk, Bucharest, Ivano-Frankivsk). The rules state explicitly: *\"No monetary prize will be awarded in the first stage (Local Hackathons) by EUSPA.\"* If a local organiser or sponsor chooses to hand out their own prize at that stage, the rules say *\"such prize shall not be confused with the Hackathon Prize nor considered in any way as a Prize awarded by EUSPA.\"*\n- Only the **top-ranked team from each local hackathon** advances to Stage 2, the European Finals — a live online pitch day judged by an Evaluation Committee.\n- The €9,000 (1st: €5,000, 2nd: €3,000, 3rd: €1,000), plus up to 100 hours of mentoring over 6 months, is awarded only at that European Finals stage, per the CASSINI knowledge base entry and confirmed by the Rules of Contest.\n\nSo the €9,000 pool is real and cash (per the official CASSINI site and Rules of Contest), but it's a European Finals prize, not something you can win directly at a local event. Worth flagging: CASSINI's own homepage copy — *\"compete for cash prizes up to 9,000 EUR\"* — reads as if just showing up gets you in the running, but the Rules of Contest are the authoritative document and are unambiguous that Stage 1 pays nothing from EUSPA. I'd trust the Rules of Contest over the homepage phrasing here.\n\nTo have a shot at the €9,000, you'd need to win your local hackathon outright and then place in the top 3 at the European Finals.",
+      "answer": "Not directly — attending a local hackathon alone doesn't put you in the running for the €9,000. Here's the distinction, straight from the sources:\n\n**The €9,000 figure is real, but it's for the European Finals, not the local event.** The official CASSINI website states you can \"compete for cash prizes up to 9,000 EUR (1st: 5,000, 2nd: 3,000, 3rd: 1,000) plus 6 months of mentoring\" — but our dataset flags this as **superseded**, with a note that reading it on its own \"suggests that turning up to your local hackathon puts you in the running for 9,000 EUR, and the Rules of Contest say otherwise.\"\n\n**The EUSPA Rules of Contest (the authoritative document) say clearly:** \"No monetary prize will be awarded in the first stage (Local Hackathons) by EUSPA. In case local organisers and/or other partners decide to award monetary prizes following the Local Hackathons and based on the outcome thereof, such prize shall not be confused with the Hackathon Prize nor considered in any way as a Prize awarded by EUSPA.\"\n\nSo the actual path to that money is:\n\n1. You compete at one of the 10 local in-person hackathons (27–29 Nov 2026) — no EUSPA cash is on offer here.\n2. Only the **top team from your city** advances to Stage 2, the European Finals (an online Demo Day).\n3. Only at the Finals does EUSPA award the €5,000 / €3,000 / €1,000 (totaling €9,000), plus up to 100 hours of mentoring over 6 months for the three winning teams.\n\nLocal organisers *may* choose to hand out their own prizes at the local stage, but per the Rules, those are explicitly not EUSPA prizes and shouldn't be confused with the €9,000 pot.\n\nI'd trust the Rules of Contest here (an \"official-rules\" document, EUSPA) over the marketing language on the main hackathons page — it's the source that actually governs the prize contest, and the dataset's verdict agrees.",
       "tools": [
-        {
-          "name": "knowledge_base_read",
-          "input": {
-            "paths": [
-              "events/cassini/edition_12"
-            ]
-          }
-        },
-        {
-          "name": "groq_query",
-          "input": {
-            "query": "*[_type==\"statement\" && field==\"prize\" && event->series match \"cassini*\"]{quote, verdict, verdictNote, \"source\": source->{title,kind,publisher,url}, \"event\": event->{name,year}}"
-          }
-        },
         {
           "name": "knowledge_base_read",
           "input": {
             "knowledgeBase": "kbFmPO9HVpQh",
             "paths": [
-              "events/cassini/edition_12"
+              "events/cassini/event_overview",
+              "events/cassini/rules_and_eligibility"
             ]
+          }
+        },
+        {
+          "name": "groq_query",
+          "input": {
+            "query": "*[_type==\"statement\" && event->series match \"cassini*\"]{field, quote, verdict, verdictNote, \"source\": source->{title, publisher, kind, url}, \"event\": event->name}"
           }
         }
       ],
-      "seconds": 18.9
+      "seconds": 14.5
     },
     {
       "question": "Which prizes are real cash?",
-      "answer": "Based on the dataset's `prizeIsCash` field and the underlying statements, here's the real picture across the five events:\n\n**Confirmed cash: CASSINI Hackathon #12** — but only at the very top.\nThe official CASSINI site says teams \"compete for cash prizes up to 9,000 EUR (1st: 5,000, 2nd: 3,000, 3rd: 1,000) plus 6 months of mentoring.\" However, the official Rules of Contest (EUSPA) clarify this is the **European Finals** prize only, won by one team per city: \"No monetary prize will be awarded in the first stage (Local Hackathons) by EUSPA.\" So if you just attend a local CASSINI hackathon, there is no EUSPA cash — you'd need to be your city's finalist to be in the running for that €9,000. The dataset marks this statement \"superseded\" for exactly that reason: read on its own, the headline figure misleads people into thinking showing up gets them into the cash pool.\n\n**Explicitly NOT cash: Power of Europe (Amsterdam)**\nThe organiser's own listing says the \"7,800 EUR+\" headline for first place (and the smaller figures for 2nd/3rd) is \"credits from partner companies (Orq AI, Mistral, Weaviate, Koyeb, Kilocode AI)\" — not money. The dataset records `prizeIsCash: no` for this one.\n\n**Not stated whether cash: Junction 2026 and BaselHack 2026**\n- Junction's own site advertises \"€100,000 In prizes across the weekend\" but adds \"Full prize breakdown coming soon\" — and per the dataset's note, that \"coming soon\" has sat on the page since it was read. Nothing on the page says how much (if any) is cash, so this is the largest figure in the dataset with no cash confirmation at all.\n- BaselHack's official site only promises \"fantastic prize money\" with no figure and no clarification — the dataset flags this as unresolved: \"No figure anywhere on the official site. Any number you find elsewhere came from somewhere else.\"\n\n**Not stated at all: Odoo Hackathon #6**\nNo prize claim is recorded for Odoo in either the dataset or the knowledge base entries I have — prize status is simply silent, not \"no.\"\n\n**Bottom line:** the only prize money you can point to as unambiguously cash, from an official source, is CASSINI's €9,000 top-three purse for the European Finals — and that's earned only after winning your local round, not for entering. Everything else in this set is either explicitly non-cash (Power of Europe's credits) or a headline figure with no statement anywhere confirming it's money (Junction's €100k, BaselHack's undisclosed \"prize money,\" Odoo's unmentioned prizes).",
+      "answer": "Here's the breakdown across the five events in the dataset, by whether the prize is actually cash:\n\n**Confirmed cash — but only for a specific subset of participants**\n\n- **CASSINI Hackathon #12 (EU Space for Peace and Resilience):** dataset marks this \"yes,\" but with an important caveat. The official CASSINI site says you can \"compete for cash prizes up to 9,000 EUR (1st: 5,000, 2nd: 3,000, 3rd: 1,000) plus 6 months of mentoring\" — but this claim is flagged as **superseded**: it's only true of the European Finals, not the local hackathons. The official Rules of Contest (the authoritative document) state plainly that \"No monetary prize will be awarded in the first stage (Local Hackathons) by EUSPA,\" and that any money a local organiser hands out separately \"shall not be confused with the Hackathon Prize nor considered in any way as a Prize awarded by EUSPA.\" Only one team per city advances to the finals, so for everyone else there is no EUSPA cash at all. The finals prizes (€5k/€3k/€1k, €9,000 total) also come with up to 100 hours of mentoring for the three winning teams.\n\n**Explicitly not cash**\n\n- **Power of Europe Amsterdam:** prizes are partner credits, not cash — \"Top 3 teams receive credits from partner companies (Orq AI, Mistral, Weaviate, Koyeb, Kilocode AI). First place: 7,800 EUR+ in combined credits; second place: 3,650+; third place: 2,550+.\" The dataset explicitly marks this \"no\" for cash — a 7,800 EUR headline with no cash in it.\n\n**Not stated whether cash — headline figures exist but form is unconfirmed**\n\n- **Junction 2026:** the official site states \"€100,000 In prizes across the weekend. Full prize breakdown coming soon,\" but never says how much (if any) is cash. This is the largest prize figure in the dataset, and the dataset's note points out that \"coming soon\" has been sitting on the page since it was read — so treat the composition as unresolved, not confirmed cash.\n- **BaselHack 2026:** the official site only says \"Great prices for winners ... fantastic prize money\" — no figure at all. The dataset verdict is \"unresolved\": there's no number on the official site, so any figure you might see elsewhere didn't come from BaselHack itself.\n- **Odoo Hackathon #6:** described only as \"fantastic prizes\" evaluated by an Odoo expert panel — no value, cash-or-not status, or number of winners stated anywhere in official sources.\n\n**Bottom line:** the only confirmed real cash prizes in this dataset are the CASSINI European Finals prizes (€5,000/€3,000/€1,000), and those apply only to the one team per city that advances beyond the local hackathon stage — not to local participants generally. Everything else is either explicitly non-cash (Power of Europe's credits) or a headline figure whose cash status is not stated (Junction, BaselHack, Odoo).",
       "tools": [
         {
           "name": "groq_query",
           "input": {
-            "query": "*[_type == \"event\"]{name, series, year, \"prizeIsCashValue\": prizeIsCash.value, \"prizeIsCashBasisQuote\": prizeIsCash.basis->quote, \"prizeIsCashBasisSource\": prizeIsCash.basis->source->{title, kind, publisher, url}}"
+            "query": "*[_type == \"event\"]{name, year, \"prizeIsCashValue\": prizeIsCash.value, \"prizeIsCashBasisQuote\": prizeIsCash.basis->quote, \"prizeIsCashBasisSource\": prizeIsCash.basis->source->{title, publisher, kind, url}}"
           }
         },
         {
           "name": "schema_explorer",
           "input": {
             "type": "event"
-          }
-        },
-        {
-          "name": "groq_query",
-          "input": {
-            "query": "*[_type == \"event\"]{name, prizeAmount, prizeCurrency, \"cashValue\": prizeIsCash.value, \"cashBasis\": prizeIsCash.basis->{quote, verdict, verdictNote, \"source\": source->{title, kind, publisher, url}}}"
           }
         },
         {
@@ -139,28 +85,7 @@
         {
           "name": "groq_query",
           "input": {
-            "query": "*[_type == \"statement\" && field == \"prize\"]{_id, \"event\": event->name, quote, verdict, verdictNote, \"source\": source->{title, kind, publisher, url}}"
-          }
-        }
-      ],
-      "seconds": 28.9
-    },
-    {
-      "question": "What do the listing sites get wrong?",
-      "answer": "Here's what goes wrong with the listing sites specifically, drawn from the dataset and cross-checked against organiser pages:\n\n**1. hackathon.com — false \"nothing exists\" result**\nOn 20 September 2026, hackathon.com's Europe listing returned: *\"There is no upcoming hackathons found in 'Europe'\"* — flatly stated. That's simply wrong: a survey of listing sites that same day turned up fifteen candidate events, five of which are documented here (Junction, BaselHack, CASSINI, Odoo Hackathon #6, Power of Europe). **Don't treat a null/empty result from hackathon.com as evidence nothing is happening — it's a data gap, not reality.**\n\n**2. dev.events — silent omission of a major event**\nOn the same date, dev.events listed five European tech hackathons (Turin's Agentic Dollars hackathon, Hack Apertus in Bern, BaselHack, Odoo Hackathon #6, Barcelona Hackathon) but **left out Junction entirely** — an event with 2,000 builders and a €100,000 prize pool, happening three weeks after the last event on their list. A list that looks complete can just be missing something big; the aggregator is wrong here, not the event.\n\n**3. dev.events — a smaller, more forgivable slip**\ndev.events also lists Odoo Hackathon #6's venue as \"Ramillies, Belgium.\" That's not technically false — Grand-Rosière (the actual venue, at Rue des Bourlottes 9, 1367 Grand-Rosière) sits within the Ramillies municipality — but it's not specific enough to navigate to. This one is marked \"unresolved\" rather than incorrect, since it's imprecise rather than wrong.\n\n**Related but not an aggregator: Wikipedia's date lag**\nNot a listing site, but the same failure family — Wikipedia's Junction article (last edited 3 June 2026) still describes the *2025* edition, giving dates of November 14–16. Junction 2026 actually runs **13–15 November**, one day earlier. This is the kind of near-miss that gets silently copied elsewhere if you don't check the organiser's own site.\n\n**The pattern:** these failures aren't random noise — they cluster into omission (leaving real events off the list, or claiming none exist) and staleness (describing a past edition as current). The organiser's own page is the fix in every case: Junction's own site has the correct 2026 dates, and the five events actually running in Europe this period are all confirmed on their own official pages, not the aggregators.",
-      "tools": [
-        {
-          "name": "knowledge_base_read",
-          "input": {
-            "paths": [
-              "source_reliability"
-            ]
-          }
-        },
-        {
-          "name": "groq_query",
-          "input": {
-            "query": "*[_type == \"source\" && kind == \"aggregator\"]{_id, title, url, publisher}"
+            "query": "*[_type == \"statement\" && field == \"prize\"]{_id, \"event\": event->name, quote, verdict, verdictNote, \"source\": source->{title, publisher, kind, url}}"
           }
         },
         {
@@ -168,18 +93,36 @@
           "input": {
             "knowledgeBase": "kbFmPO9HVpQh",
             "paths": [
-              "source_reliability"
+              "prizes_awards_and_support",
+              "events/odoo",
+              "events/cassini/rules_and_eligibility"
             ]
+          }
+        }
+      ],
+      "seconds": 24.3
+    },
+    {
+      "question": "What do the listing sites get wrong?",
+      "answer": "Two aggregator/listing sites in this dataset get things wrong, and a third-party page (Wikipedia) goes stale in a similar way:\n\n**hackathon.com — false negative, most severe failure**\nOn 20 September 2026 this aggregator stated: *\"There is no upcoming hackathons found in 'Europe'\"* (dataset source: hackathon.com, verdict: **incorrect**). A survey of five listing sites done the same day turned up fifteen candidate European events, five of which are actually tracked in this dataset. So \"no results\" from this site should never be read as \"nothing is happening\" — treat it as unreliable rather than authoritative (source_reliability, kbFmPO9HVpQh).\n\n**dev.events — incomplete list that looks complete**\nOn the same date, dev.events listed only five European events for the whole continent: Turin (17–18 Oct), Bern (18–19 Oct), Basel/BaselHack (30 Oct–1 Nov), Odoo Hackathon #6 in Ramillies (20–22 Nov), and Barcelona (11–13 Dec) — dataset verdict **incorrect** on that list as a status claim. It omits Junction 2026 entirely, despite Junction being roughly 2,000 participants and €100,000 in prizes, running just three weeks after the last event on that list. The dangerous part, per the knowledge base, is that \"no error message, no caveat, just missing coverage\" makes the list look authoritative when it isn't (source_reliability).\n\nSeparately, dev.events' venue listing for Odoo Hackathon #6 says \"Ramillies, Belgium\" — this is marked **unresolved** rather than flatly wrong, because Grand-Rosière (the actual address, Rue des Bourlottes 9) is technically within the Ramillies municipality, but you can't navigate to a real location with just \"Ramillies.\"\n\n**Wikipedia — stale, not a listing site per se, but same failure pattern**\nThe \"Junction (hackathon)\" Wikipedia article, last edited 3 June 2026, still described the 2025 edition as of 20 September 2026, quoting dates of November 14–16. Junction 2026 actually runs 13–15 November — one day earlier. Verdict: **superseded**. The knowledge base calls this out as exactly the kind of near-miss that gets silently copied into other secondary sources.\n\n**Trust hierarchy recommended by the knowledge base:**\n1. Organiser's own site/official communications\n2. This structured dataset (snapshot from 20 September 2026)\n3. Third-party aggregators (dev.events, hackathon.com) — useful for discovery only, demonstrably incomplete/incorrect\n4. Wikipedia — fine for background, not for current-edition logistics\n\nBottom line: don't take an aggregator's silence or absence-of-listing as proof an event doesn't exist or has been cancelled — in this dataset's snapshot, both major listing sites checked either under-reported or flatly denied events that were confirmed live on organisers' own pages.",
+      "tools": [
+        {
+          "name": "knowledge_base_read",
+          "input": {
+            "paths": [
+              "source_reliability"
+            ],
+            "knowledgeBase": "kbFmPO9HVpQh"
           }
         },
         {
           "name": "groq_query",
           "input": {
-            "query": "*[_type == \"statement\" && source->kind in [\"aggregator\",\"third-party\"]]{field, quote, verdict, verdictNote, \"source\": source->publisher, \"event\": event->name}"
+            "query": "*[_type == \"statement\" && verdict in [\"incorrect\",\"superseded\",\"unresolved\"]]{ field, quote, verdict, verdictNote, \"event\": event->name, \"sourceTitle\": source->title, \"sourceKind\": source->kind, \"sourcePublisher\": source->publisher }"
           }
         }
       ],
-      "seconds": 19
+      "seconds": 24.9
     }
   ]
 }
