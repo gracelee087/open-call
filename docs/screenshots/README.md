@@ -8,18 +8,18 @@ Save each as `NN-short-name.png` in this folder.
 
 | # | Shot | Where to take it | Status |
 |---|---|---|---|
-| 1 | Studio blocks a stated value with no source | | |
-| 2 | Event form, both field groups | | |
-| 3 | Several statements disagreeing on one event | | |
-| 4 | An event where most claims are "not stated" | | |
-| 5 | KB Sources tab | Context → open-call → Sources | |
-| 6 | KB Entries tab, the outline | Context → open-call → Entries | |
-| 7 | KB Issues, the Odoo conflict | Context → Issues → Resolved | |
-| 8 | The issue in detail: both dates side by side | click into that issue | |
-| 9 | Instructions tab, all six | Context → Instructions | |
-| 10 | Agent tool-call trace | localhost:3000, click an example | |
-| 11 | An answer citing its sources | same, scroll to the citations | |
-| 12 | Deployed Studio + Dashboard listing it | manage.sanity.io | |
+| 1 | Studio blocks a stated value with no source | | `01-validation.png` |
+| 2 | Event form, both field groups | | `02-event-form.png` |
+| 3 | Several statements disagreeing on one event | | `03-statements.png` |
+| 4 | An event where most claims are "not stated" | | skipped |
+| 5 | KB Sources tab | Context → open-call → Sources | `05-kb-sources.png` |
+| 6 | KB Entries tab, the outline | Context → open-call → Entries | `06-kb-entries.png` |
+| 7 | KB Issues, the Odoo conflict | Context → Issues → Resolved | `07-kb-issues-resolved.png` |
+| 8 | The issue in detail: both dates side by side | click into that issue | `08-kb-issue-detail.png` |
+| 9 | Instructions tab, all seven active | Context → Instructions | `09-kb-instructions.png` |
+| 10 | Agent tool-call trace | localhost:3000, click an example | `10-agent-trace.png`, `10b-agent-queries.png` |
+| 11 | An answer citing its sources | same, scroll to the citations | `11-agent-answer.png` |
+| 12 | Deployed Studio + Dashboard listing it | manage.sanity.io | `12-sanity-project.png` |
 
 ## How to take the ones that need a note
 
