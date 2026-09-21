@@ -84,6 +84,14 @@
   Free로 내려가도 ① public 데이터셋 조회가 되는가 ② Knowledge Base가 살아 있는가.
   KB가 죽으면 심사 기준 ③ 증거가 통째로 사라진다 → 캡처와 저장된 답변으로 대비한다.
 - 저장소는 **제출 전 반드시 public**으로 전환해야 한다. private면 `## Code`가 죽은 링크가 되고 기준 ②를 심사할 수 없다.
+- **데모 영상** (2026-09-21 원문 대조로 정함). 프로젝트: `Desktop\open-call-demo` (HyperFrames, 저장소 밖).
+  - 내레이션에서 **"Sanity Context MCP"와 Knowledge Base를 이름으로 말한다.** Path One 원문이
+    *"point it at a Sanity Context MCP endpoint backed by a Knowledge Base"*이고 기준 ①이 "Sanity Context"다.
+  - Knowledge Base가 **무엇으로 만들어졌는지**(웹페이지 + 자체 데이터셋) 보여 준다 — 기준 ③.
+  - 인용·수치는 **원문 그대로**: hackathon.com은 *"There is no upcoming hackathons found in 'Europe'"* ("upcoming"을 빼지 않는다).
+    Junction을 "biggest"라 하지 않는다(자칭 표현) — 제출 글의 사실(2,000 builders, €100,000)로 말한다.
+  - 없는 UI를 만들지 않는다. 화면은 실제 스크린샷·캡처만.
+  - 제출 글에 **HyperFrames로 만든 영상임을 표기**한다 (표절 조항: prior work는 credit).
 
 ---
 

@@ -276,7 +276,8 @@ https://dmar00cc.api.sanity.io/v2024-01-01/data/query/production?query=*[_type==
 
 ---
 
-Built with Claude Code. Not investment advice, and not a substitute for reading the
+Built with Claude Code. The demo video was made with [HyperFrames](https://hyperframes.heygen.com)
+from the screenshots above. Not investment advice, and not a substitute for reading the
 organiser's page before you book a flight. That is rather the point.
 
 #sanitychallenge
