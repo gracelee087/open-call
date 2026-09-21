@@ -44,6 +44,12 @@ now, the website's marked superseded, and the agent leads with the rules.
 
 <!-- TODO before submitting: replace with the deployed URL or an embedded video. -->
 
+![The front page: four recorded questions and a box to ask your own](https://raw.githubusercontent.com/gracelee087/open-call/main/docs/screenshots/13-front-page.png)
+
+![An answer with the GROQ it ran expanded underneath](https://raw.githubusercontent.com/gracelee087/open-call/main/docs/screenshots/10b-agent-queries.png)
+
+![The same answer: one deadline is sourced, the rest are marked not stated](https://raw.githubusercontent.com/gracelee087/open-call/main/docs/screenshots/11-agent-answer.png)
+
 The four example questions on the front page are **recordings, not mock-ups**:
 `web/data/examples.json` holds the answer text, the tool calls and the GROQ queries exactly
 as the agent produced them, written by `web/scripts/record-examples.mjs`. They are bundled
@@ -104,6 +110,8 @@ The schema refuses to store a claim that cannot point at a source:
 > A stated value needs a source. Either set it to "Not stated in the source", or say where
 > you read it.
 
+![Studio: Free to enter set to Yes with its source cleared. The field is flagged and Publish is disabled](https://raw.githubusercontent.com/gracelee087/open-call/main/docs/screenshots/01-validation.png)
+
 and refuses a prize figure with nothing behind it:
 
 > A prize figure needs a source. Fill in "Prize is cash" and say where the figure was read.
@@ -122,6 +130,8 @@ Three document types and one object:
 | `statement` | One thing one source said about one aspect of one event, **quoted verbatim**, with a verdict: accepted, superseded, incorrect, or not looked at yet. |
 | `event` | One edition. Junction 2026 and Junction 2025 would be two documents. |
 | `sourcedClaim` | The object above. |
+
+![Studio: statements, each quoted verbatim and tied to one event, one field and one source](https://raw.githubusercontent.com/gracelee087/open-call/main/docs/screenshots/03-statements.png)
 
 Statements come first and event fields are filled from them, never the other way round, so
 a summary that turns out wrong can be traced back to the sentence it came from.
@@ -143,16 +153,19 @@ removes a round trip from the start of every conversation. The model ends up wit
 tools and picks the half of the product it needs:
 
 ```
-"Which prizes are real cash?"              → groq_query
+"Which prizes are real cash?"              → groq_query, then knowledge_base_read
 "Can I win the 9,000 EUR at a local one?"  → knowledge_base_read, then groq_query
-"What can I still apply to?"               → both, six calls
+"What can I still apply to?"               → both, three calls
 ```
 
 ### What the Knowledge Base caught that I did not
 
 Nine sources went in: five organiser pages, an application platform, Wikipedia, three
 listing sites included deliberately so there would be something to disagree with, and the
-project's own dataset. 72 documents, 9 entries.
+project's own dataset. 72 documents, 9 entries — 73 and 11 after the rebuild described
+below.
+
+![Context: the knowledge base's nine sources](https://raw.githubusercontent.com/gracelee087/open-call/main/docs/screenshots/05-kb-sources.png)
 
 The build raised one conflict, and it was not the one I expected. The Odoo registration
 page contradicts **itself** about the cancellation cut-off — 13 November in one section, 14
@@ -170,6 +183,10 @@ source, so the knowledge base carries what each source is worth:
 
 > *These listings are incomplete. Absence from them is not evidence that an event does not
 > exist… Never answer "there are none" or "it is not listed" on the strength of these pages.*
+
+![Context: the Odoo conflict, both sentences side by side, resolved into an instruction](https://raw.githubusercontent.com/gracelee087/open-call/main/docs/screenshots/08-kb-issue-detail.png)
+
+![Context: the instructions, each tied to the sources it applies to](https://raw.githubusercontent.com/gracelee087/open-call/main/docs/screenshots/09-kb-instructions.png)
 
 The next build then wrote an entry I had not asked for — `source_reliability`, with a topic
 for each aggregator omission, the Wikipedia date lag, and the BaselHack inconsistency, plus
@@ -204,6 +221,19 @@ Asked the same question today, the agent names the trap instead of falling into 
 > application deadline for Odoo Hackathon #6, so I'm not going to present either of those
 > dates as one."*
 
+The entry itself took a rebuild to fix, and the rebuild made a new mistake. It now says *"No
+application deadline is stated anywhere by the organiser."* But the rebuilt CASSINI entry
+took a line from the organisers' recruitment page, *"12th Hackathon Applications closed"*,
+and the next recorded answer told a participant that CASSINI #12 was closed to them. The
+line sits next to a link to the organiser application form. It is about organisations
+applying to host a local hackathon, not about participants. The dataset has no application
+date and no registration status for CASSINI, so the answer had nothing behind it. One more
+instruction, scoped to that page, and the entry now reads *"Applications for local
+organisers for Hackathon #12 are now closed."* The recorded answer says CASSINI is *"Unclear
+for participants."* That is the most the sources support.
+
+![Context: the rebuilt knowledge base, eleven entries including a cross-event one](https://raw.githubusercontent.com/gracelee087/open-call/main/docs/screenshots/06-kb-entries.png)
+
 ## Sanity Project Details
 
 - **Project ID: `dmar00cc`**
@@ -224,6 +254,8 @@ https://dmar00cc.api.sanity.io/v2024-01-01/data/query/production?query=*[_type==
 *[_type=="statement" && verdict in ["superseded","incorrect"]]{
   quote, verdict, verdictNote, "said by": source->title}
 ```
+
+![sanity.io/manage: project Open Call, ID dmar00cc](https://raw.githubusercontent.com/gracelee087/open-call/main/docs/screenshots/12-sanity-project.png)
 
 ### What this does not do
 
