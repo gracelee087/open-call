@@ -42,7 +42,7 @@ now, the website's marked superseded, and the agent leads with the rules.
 
 ## Demo
 
-<!-- TODO before submitting: replace with the deployed URL or an embedded video. -->
+{% youtube H06X7CoVx8A %}
 
 ![The front page: four recorded questions and a box to ask your own](https://raw.githubusercontent.com/gracelee087/open-call/main/docs/screenshots/13-front-page.png)
 
@@ -276,8 +276,8 @@ https://dmar00cc.api.sanity.io/v2024-01-01/data/query/production?query=*[_type==
 
 ---
 
-Built with Claude Code. The demo video was made with [HyperFrames](https://hyperframes.heygen.com)
-from the screenshots above. Not investment advice, and not a substitute for reading the
+Built with Claude Code. The demo video is a screen recording of the app, edited with
+[HyperFrames](https://hyperframes.heygen.com) together with the screenshots above. Not investment advice, and not a substitute for reading the
 organiser's page before you book a flight. That is rather the point.
 
 #sanitychallenge
